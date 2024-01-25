@@ -11,7 +11,7 @@ app.get('/', (req, res) => {
   const filename = req.query.filename as unknown as string;
   const width = parseInt(req.query.width as unknown as string);
   const height = parseInt(req.query.height as unknown as string);
-
+  
   // Validate query parameters
   if ((filename.length === 0) || isNaN(width) || isNaN(height)) {
     return res.status(400).send('Invalid query parameters');

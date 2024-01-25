@@ -1,39 +1,33 @@
 import sharp from 'sharp';
 import path from 'path';
-import fs from 'fs/promises';
+import fs from 'fs';
+
 
 const resizeImage = async (
   filename: string,
   height: number,
   width: number
 ): Promise<Buffer> => {
-  return await sharp(
-    path.resolve(
-      `C:/Users/rachm/OneDrive/Desktop/EX/Project1/images/original/${filename}.jpg`
-    )
-  )
+  const originalPath = path.join('images','original', `${filename}.jpg`);
+  const cachedPath = path.join('images','resized', `${filename}_${width}x${height}.jpg`);
+
+  // Check if cached image exists
+  if (fs.existsSync(cachedPath)) {
+    return fs.promises.readFile(cachedPath);
+  }
+
+  // Resize and save image
+  const data = await sharp(originalPath)
     .resize({
       width,
       height,
       fit: sharp.fit.cover
     })
     .toBuffer();
+
+  await sharp(data).toFile(cachedPath);
+
+  return data;
 };
-
-const OUTPUT_DIR = path.resolve('C:/Users/rachm/OneDrive/Desktop/EX/Project1/images/resized');
-
-const saveImage = async (buffer: Buffer, filename: string, width: number, height: number): Promise<string> => {
-  // Ensure the output directory exists
-  await fs.mkdir(OUTPUT_DIR, { recursive: true });
-
-  // Construct the output file path
-  const outputFilePath = path.join(OUTPUT_DIR, `${filename}-${width}x${height}.jpg`);
-
-  // Save the buffer to a file
-  await fs.writeFile(outputFilePath, buffer);
-
-  return outputFilePath;
-};
-
 
 export default resizeImage;

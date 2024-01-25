@@ -6,7 +6,7 @@ const request = supertest(app);
 describe('Test endpoint responses', () => {
   it('Gets / endpoint', async () => {
     const response = await request.get(
-      '/?filename=encenadaport&width=200&height=200'
+      '/?filename=g&width=200&height=200'
     );
     expect(response.status).toBe(200);
   });
